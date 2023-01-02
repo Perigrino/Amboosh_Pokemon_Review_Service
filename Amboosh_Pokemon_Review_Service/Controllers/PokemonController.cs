@@ -1,8 +1,10 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Amboosh_Pokemon_Review_Service.Data;
+using Amboosh_Pokemon_Review_Service.Dto;
 using Amboosh_Pokemon_Review_Service.Interfaces;
 using Amboosh_Pokemon_Review_Service.Model;
+using AutoMapper;
 
 namespace Amboosh_Pokemon_Review_Service.Controllers
 {
@@ -11,17 +13,19 @@ namespace Amboosh_Pokemon_Review_Service.Controllers
     public class PokemonController : ControllerBase
     {
         private readonly IPokemonRepo _pokemonRepo;
+        private readonly IMapper _mapper;
 
-        public PokemonController(IPokemonRepo pokemonRepo)
+        public PokemonController(IPokemonRepo pokemonRepo, IMapper iMapper)
         {
             _pokemonRepo = pokemonRepo;
+            _mapper = iMapper;
         }
 
         // GET: api/Pokemon
         [HttpGet]
         public  IActionResult GetPokemons()
         {
-            var pokemon =  _pokemonRepo.GetPokemons();
+            var pokemon =  _mapper.Map<List<PokemonDto>>(_pokemonRepo.GetPokemons());
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
@@ -36,7 +40,7 @@ namespace Amboosh_Pokemon_Review_Service.Controllers
             if (!_pokemonRepo.PokemonExists(pokemonId))
                 return NotFound();
             
-            var pokemon = _pokemonRepo.GetPokemon(pokemonId);
+            var pokemon = _mapper.Map<PokemonDto>(_pokemonRepo.GetPokemon(pokemonId));
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
             

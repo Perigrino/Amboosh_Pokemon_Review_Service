@@ -7,7 +7,6 @@ namespace Amboosh_Pokemon_Review_Service.Repository;
 public class PokemonRepo : IPokemonRepo
 {
     private readonly AppDbContext _context;
-
     public PokemonRepo(AppDbContext context)
     {
         _context = context;
