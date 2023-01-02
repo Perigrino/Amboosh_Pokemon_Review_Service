@@ -2,12 +2,15 @@ using Amboosh_Pokemon_Review_Service.Data;
 using Amboosh_Pokemon_Review_Service.Interfaces;
 using Amboosh_Pokemon_Review_Service.Repository;
 using Microsoft.EntityFrameworkCore;
+using AutoMapper;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddScoped<IPokemonRepo, PokemonRepo>();
+builder.Services.AddScoped<ICategory, CategoryRepo>();
 builder.Services.AddControllers();
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddDbContext<AppDbContext>(Options => Options.UseNpgsql(builder.Configuration.GetConnectionString("Default")));
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
