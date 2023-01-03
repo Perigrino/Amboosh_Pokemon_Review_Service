@@ -22,15 +22,16 @@ namespace Amboosh_Pokemon_Review_Service.Controllers
         }
 
         // GET: api/Pokemon
-        [HttpGet]
-        public  IActionResult GetPokemons()
+        [HttpGet("pagenumber{pageNumber}")]
+        public  IActionResult GetPokemons(int pageNumber)
         {
-            var pokemon =  _mapper.Map<List<PokemonDto>>(_pokemonRepo.GetPokemons());
+            var pokemon =  _mapper.Map<List<PokemonDto>>(_pokemonRepo.GetPokemons(pageNumber));
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
             return Ok(pokemon);
+            
         }
 
         // GET: api/Pokemon/pokemonId

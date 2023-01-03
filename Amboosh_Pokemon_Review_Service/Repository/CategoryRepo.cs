@@ -1,3 +1,4 @@
+using Amboosh_Library.Data.Paging;
 using Amboosh_Pokemon_Review_Service.Data;
 using Amboosh_Pokemon_Review_Service.Interfaces;
 using Amboosh_Pokemon_Review_Service.Model;
@@ -13,9 +14,13 @@ public class CategoryRepo : ICategory
     }
     
     
-    public ICollection<Category> GetCategories()
+    public ICollection<Category> GetCategories(int? pageNumber)
     {
         var category = _context.Categories.OrderBy(c => c.Id).ToList();
+        
+        //Paging
+        int pageSize = 10;
+        category = PaginatedList<Category>.Create(category.AsQueryable(), pageNumber ?? 1, pageSize);
         return category;
     }
 

@@ -23,10 +23,10 @@ namespace Amboosh_Pokemon_Review_Service.Controllers
         }
 
         // GET: api/Category
-        [HttpGet]
-        public  IActionResult GetCategories()
+        [HttpGet("pagenumber{pageNumber}")]
+        public  IActionResult GetCategories(int pageNumber)
         {
-            var category =  _mapper.Map<List<CategoryDto>>(_categoryRepo.GetCategories());
+            var category =  _mapper.Map<List<CategoryDto>>(_categoryRepo.GetCategories(pageNumber));
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
