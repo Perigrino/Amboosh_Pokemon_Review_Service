@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Amboosh_Pokemon_Review_Service.Dto;
 using Amboosh_Pokemon_Review_Service.Interfaces;
-using Amboosh_Pokemon_Review_Service.Model;
 using AutoMapper;
 
 namespace Amboosh_Pokemon_Review_Service.Controllers
