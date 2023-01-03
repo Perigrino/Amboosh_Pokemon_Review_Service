@@ -1,9 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Amboosh_Pokemon_Review_Service.Data;
 using Amboosh_Pokemon_Review_Service.Dto;
 using Amboosh_Pokemon_Review_Service.Interfaces;
-using Amboosh_Pokemon_Review_Service.Model;
 using AutoMapper;
 
 namespace Amboosh_Pokemon_Review_Service.Controllers
@@ -22,10 +19,10 @@ namespace Amboosh_Pokemon_Review_Service.Controllers
         }
 
         // GET: api/Pokemon
-        [HttpGet]
-        public  IActionResult GetPokemons()
+        [HttpGet("pagenumber{pageNumber}")]
+        public  IActionResult GetPokemons(int pageNumber)
         {
-            var pokemon =  _mapper.Map<List<PokemonDto>>(_pokemonRepo.GetPokemons());
+            var pokemon =  _mapper.Map<List<PokemonDto>>(_pokemonRepo.GetPokemons(pageNumber));
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);

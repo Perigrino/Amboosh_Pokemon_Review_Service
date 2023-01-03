@@ -1,3 +1,4 @@
+using Amboosh_Library.Data.Paging;
 using Amboosh_Pokemon_Review_Service.Data;
 using Amboosh_Pokemon_Review_Service.Interfaces;
 using Amboosh_Pokemon_Review_Service.Model;
@@ -12,9 +13,13 @@ public class PokemonRepo : IPokemonRepo
         _context = context;
     }
 
-    public ICollection<Pokemon> GetPokemons()
+    public ICollection<Pokemon> GetPokemons(int? pageNumber)
     {
         var pokemon = _context.Pokemons.OrderBy(p=>p.Id).ToList();
+        
+        //Paging
+        int pageSize = 10;
+        pokemon = PaginatedList<Pokemon>.Create(pokemon.AsQueryable(), pageNumber ?? 1, pageSize);
         return pokemon;
     }
 
