@@ -31,7 +31,6 @@ namespace Amboosh_Pokemon_Review_Service.Controllers
                 return BadRequest(ModelState);
             }
             return Ok(pokemon);
-            
         }
 
         // GET: api/Pokemon/pokemonId
