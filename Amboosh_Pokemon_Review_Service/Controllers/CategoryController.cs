@@ -46,7 +46,7 @@ namespace Amboosh_Pokemon_Review_Service.Controllers
         [HttpGet("{categoryId}/PokemonCategory")]
         public IActionResult GetPokemonCategory(int categoryId)
         {
-            var pokemon = _mapper.Map<List<CategoryDto>>(_categoryRepo.GetPokemonsByCategory(categoryId));
+            var pokemon = _categoryRepo.GetPokemonsByCategory(categoryId);
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
