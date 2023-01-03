@@ -1,10 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Amboosh_Pokemon_Review_Service.Data;
 using Amboosh_Pokemon_Review_Service.Dto;
 using Amboosh_Pokemon_Review_Service.Interfaces;
-using Amboosh_Pokemon_Review_Service.Model;
-using Amboosh_Pokemon_Review_Service.Repository;
 using AutoMapper;
 
 namespace Amboosh_Pokemon_Review_Service.Controllers
