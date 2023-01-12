@@ -44,6 +44,20 @@ namespace Amboosh_Pokemon_Review_Service.Controllers
             return Ok(pokemon);
         }
         
+        // GET: api/Pokemon/pokemonName
+        [HttpGet("{pokemonName}/pokemon_name")]
+        public IActionResult GetPokemon(string pokemonName)
+        {
+            if (!_pokemonRepo.PokemonExistsByName(pokemonName))
+                return NotFound();
+            
+            var pokemon = _mapper.Map<PokemonDto>(_pokemonRepo.GetPokemonByName(pokemonName));
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+            
+            return Ok(pokemon);
+        }
+
         // GET: api/Pokemon/pokemonId/rating
         [HttpGet("{pokemonId}/rating")]
         public IActionResult GetPokemonRating(int pokemonId)

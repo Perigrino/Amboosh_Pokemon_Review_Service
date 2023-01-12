@@ -31,6 +31,11 @@ public class PokemonRepo : IPokemonRepo
 
     public Pokemon GetPokemon(string name)
     {
+        throw new NotImplementedException();
+    }
+
+    public Pokemon GetPokemonByName(string name)
+    {
         var pokemon = _context.Pokemons.Where(p => p.Name == name).FirstOrDefault();
         return pokemon;
     }
@@ -44,9 +49,15 @@ public class PokemonRepo : IPokemonRepo
         }
         return ((decimal)review.Sum(r => r.Rating) / review.Count());
     }
+    
 
     public bool PokemonExists(int pokeId)
     {
         return _context.Pokemons.Any(p => p.Id == pokeId);
+    }
+
+    public bool PokemonExistsByName(string pokeName)
+    {
+        return _context.Pokemons.Any(p => p.Name == pokeName);
     }
 }
