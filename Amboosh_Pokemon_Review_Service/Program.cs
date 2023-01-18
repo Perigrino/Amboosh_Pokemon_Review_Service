@@ -1,3 +1,4 @@
+using System.Text.Json.Serialization;
 using Amboosh_Pokemon_Review_Service.Data;
 using Amboosh_Pokemon_Review_Service.Interfaces;
 using Amboosh_Pokemon_Review_Service.Repository;
@@ -12,8 +13,8 @@ builder.Services.AddScoped<ICategory, CategoryRepo>();
 builder.Services.AddScoped<ICountryRepo, CountryRepo>();
 builder.Services.AddScoped<IOwnerRepo, OwnerRepo>();
 builder.Services.AddScoped<IReviewRepo, ReviewRepo>();
-// builder.Services.AddScoped<IReviewerRepo, ReviewerRepo>();
-builder.Services.AddControllers();
+builder.Services.AddScoped<IReviewerRepo, ReviewerRepo>();
+builder.Services.AddControllers().AddJsonOptions(x => x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve);
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddDbContext<AppDbContext>(Options => Options.UseNpgsql(builder.Configuration.GetConnectionString("Default")));
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
