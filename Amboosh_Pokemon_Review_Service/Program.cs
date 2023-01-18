@@ -11,7 +11,7 @@ builder.Services.AddScoped<IPokemonRepo, PokemonRepo>();
 builder.Services.AddScoped<ICategory, CategoryRepo>();
 builder.Services.AddScoped<ICountryRepo, CountryRepo>();
 builder.Services.AddScoped<IOwnerRepo, OwnerRepo>();
-// builder.Services.AddScoped<IReviewerRepo, ReviewReop>();
+builder.Services.AddScoped<IReviewRepo, ReviewRepo>();
 // builder.Services.AddScoped<IReviewerRepo, ReviewerRepo>();
 builder.Services.AddControllers();
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
