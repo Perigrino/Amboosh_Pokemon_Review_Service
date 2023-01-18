@@ -29,11 +29,6 @@ public class PokemonRepo : IPokemonRepo
         return pokemon;
     }
 
-    public Pokemon GetPokemon(string name)
-    {
-        throw new NotImplementedException();
-    }
-
     public Pokemon GetPokemonByName(string name)
     {
         var pokemon = _context.Pokemons.Where(p => p.Name == name).FirstOrDefault();
