@@ -14,13 +14,9 @@ public class CategoryRepo : ICategory
     }
     
     
-    public ICollection<Category> GetCategories(int? pageNumber)
+    public ICollection<Category> GetCategories()
     {
         var category = _context.Categories.OrderBy(c => c.Id).ToList();
-        
-        //Paging
-        int pageSize = 10;
-        category = PaginatedList<Category>.Create(category.AsQueryable(), pageNumber ?? 1, pageSize);
         return category;
     }
 

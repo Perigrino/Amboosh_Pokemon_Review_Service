@@ -19,10 +19,10 @@ namespace Amboosh_Pokemon_Review_Service.Controllers
         }
 
         // GET: api/Pokemon
-        [HttpGet("pagenumber{pageNumber}")]
-        public  IActionResult GetPokemons(int pageNumber)
+        [HttpGet]
+        public  IActionResult GetPokemons()
         {
-            var pokemon =  _mapper.Map<List<PokemonDto>>(_pokemonRepo.GetPokemons(pageNumber));
+            var pokemon =  _mapper.Map<List<PokemonDto>>(_pokemonRepo.GetPokemons());
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);

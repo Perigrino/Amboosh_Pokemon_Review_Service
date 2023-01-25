@@ -4,7 +4,7 @@ namespace Amboosh_Pokemon_Review_Service.Interfaces;
 
 public interface ICategory
 {
-    ICollection<Category> GetCategories(int? pageNumber);
+    ICollection<Category> GetCategories();
     Category GetCategory(int categoryId);
     ICollection<Pokemon> GetPokemonsByCategory(int categoryId);
     bool CategoryExists(int id);

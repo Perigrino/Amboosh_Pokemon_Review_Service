@@ -24,10 +24,10 @@ namespace Amboosh_Pokemon_Review_Service.Controllers
         }
         
         // GET: api/Review
-        [HttpGet("{pageNumber}/page_number")]
-        public IActionResult GetReviews(int pageNumber)
+        [HttpGet]
+        public IActionResult GetReviews()
         {
-            var reviews = _mapper.Map<List<ReviewDto>>(_reviewRepo.GetReviews(pageNumber));
+            var reviews = _mapper.Map<List<ReviewDto>>(_reviewRepo.GetReviews());
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);

@@ -14,13 +14,9 @@ public class ReviewRepo : IReviewRepo
         _context = context;
     }
     
-    public ICollection<Review> GetReviews(int? pageNumber)
+    public ICollection<Review> GetReviews()
     {
         var review = _context.Reviews.OrderBy(r => r.Id).ToList();
-        
-        //Paging
-        int pageSize = 10;
-        review = PaginatedList<Review>.Create(review.AsQueryable(), pageNumber ?? 1, pageSize);
         return review;
     }
 

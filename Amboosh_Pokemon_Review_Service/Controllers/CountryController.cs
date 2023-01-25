@@ -25,10 +25,10 @@ namespace Amboosh_Pokemon_Review_Service.Controllers
         
         
         // GET: api/Country
-        [HttpGet("pagenumber{pageNumber}")]
+        [HttpGet]
         public IActionResult GetCountries(int pageNumber)
         {
-            var country = _mapper.Map<List<CountryDto>>(_countryRepo.GetCountries(pageNumber));
+            var country = _mapper.Map<List<CountryDto>>(_countryRepo.GetCountries());
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);

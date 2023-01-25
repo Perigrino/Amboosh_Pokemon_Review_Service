@@ -19,13 +19,9 @@ public class CountryRepo : ICountryRepo
         _mapper = mapper;
     }
     
-    public ICollection<Country> GetCountries(int? pageNumber)
+    public ICollection<Country> GetCountries()
     {
         var country =  _context.Countries.OrderBy(c => c.Id).ToList();
-        
-        //Paging
-        int pageSize = 10;
-        country = PaginatedList<Country>.Create(country.AsQueryable(), pageNumber ?? 1, pageSize);
         return country;
     }
 

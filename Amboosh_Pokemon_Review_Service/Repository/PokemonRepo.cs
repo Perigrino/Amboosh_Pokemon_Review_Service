@@ -13,13 +13,9 @@ public class PokemonRepo : IPokemonRepo
         _context = context;
     }
 
-    public ICollection<Pokemon> GetPokemons(int? pageNumber)
+    public ICollection<Pokemon> GetPokemons()
     {
         var pokemon = _context.Pokemons.OrderBy(p=>p.Id).ToList();
-        
-        //Paging
-        int pageSize = 10;
-        pokemon = PaginatedList<Pokemon>.Create(pokemon.AsQueryable(), pageNumber ?? 1, pageSize);
         return pokemon;
     }
 
