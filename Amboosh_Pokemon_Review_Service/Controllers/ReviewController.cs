@@ -34,7 +34,6 @@ namespace Amboosh_Pokemon_Review_Service.Controllers
             }
             return Ok(reviews);
         }
-
         // GET: api/Review/5
         [HttpGet("{reviewID}/review")]
         public IActionResult GetReview(int reviewID)
