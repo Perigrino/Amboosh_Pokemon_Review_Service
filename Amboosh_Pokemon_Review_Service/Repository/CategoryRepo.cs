@@ -1,7 +1,9 @@
 using Amboosh_Library.Data.Paging;
 using Amboosh_Pokemon_Review_Service.Data;
+using Amboosh_Pokemon_Review_Service.Dto;
 using Amboosh_Pokemon_Review_Service.Interfaces;
 using Amboosh_Pokemon_Review_Service.Model;
+using Microsoft.EntityFrameworkCore;
 
 namespace Amboosh_Pokemon_Review_Service.Repository;
 
@@ -29,8 +31,12 @@ public class CategoryRepo : ICategory
     public ICollection<Pokemon> GetPokemonsByCategory(int categoryId)
     {
         var categoryPokemon = _context.PokemonCategories
+            .Include(r => r.Pokemon.Reviews)
+            .Include(o => o.Pokemon.PokemonOwners)
+            .Include(c => c.Pokemon.PokemonCategories)
             .Where(pc => pc.CategoryId == categoryId)
-             .Select(c => c.Pokemon).ToList();
+            .Select(c => c.Pokemon)
+            .ToList();
         return categoryPokemon;
     }
 

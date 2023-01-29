@@ -28,7 +28,7 @@ namespace Amboosh_Pokemon_Review_Service.Controllers
         
         // GET: api/Country
         [HttpGet]
-        public IActionResult GetCountries(int pageNumber)
+        public IActionResult GetCountries()
         {
             var country = _mapper.Map<List<CountryDto>>(_countryRepo.GetCountries());
             if (!ModelState.IsValid)
@@ -39,7 +39,7 @@ namespace Amboosh_Pokemon_Review_Service.Controllers
         }
 
         // GET: api/Country/5
-        [HttpGet("{countryId}/country")]
+        [HttpGet("{countryId}")]
         public IActionResult GetCountry(int countryId)
         {
             var country = _mapper.Map<CountryDto>(_countryRepo.GetCountry(countryId));
@@ -51,7 +51,7 @@ namespace Amboosh_Pokemon_Review_Service.Controllers
         }
         
         // GET: api/CountryByOwner/5
-        [HttpGet("{ownerId}/owner")]
+        [HttpGet("ownerId/{ownerId}")]
         public IActionResult GetCountryByOwner(int ownerId)
         {
             var country = _mapper.Map<CountryDto>(_countryRepo.GetCountryByOwner(ownerId));
@@ -64,7 +64,7 @@ namespace Amboosh_Pokemon_Review_Service.Controllers
         
         
         // GET: api/CountryByOwner/5
-        [HttpGet("{countryId}/countries")]
+        [HttpGet("find_owner_with_{countryId}")]
         public IActionResult GetOwnersFromCountry(int countryId)
         {
             var country = _countryRepo.GetOwnersFromCountry(countryId);
