@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Amboosh_Pokemon_Review_Service.Dto;
 using Amboosh_Pokemon_Review_Service.Interfaces;
+using Amboosh_Pokemon_Review_Service.Model;
 using AutoMapper;
 
 namespace Amboosh_Pokemon_Review_Service.Controllers
@@ -69,6 +70,36 @@ namespace Amboosh_Pokemon_Review_Service.Controllers
                 return BadRequest(ModelState);
             return Ok(pokemon);
 
+        }
+        
+        // POST: api/Owner
+        [HttpPost]
+        public IActionResult Post([FromQuery] int ownerId,int categoryId, [FromBody] PokemonDto createPokemon)
+        {
+            if (createPokemon == null)
+                return BadRequest(ModelState);
+
+            var pokemon = _pokemonRepo.GetPokemons()
+                .Where(p => p.Name.Trim().ToUpper() == createPokemon.Name.Trim().ToUpper()).FirstOrDefault();
+
+            if (pokemon != null)
+            {
+                ModelState.AddModelError("", "This pokemon already exists");
+                return StatusCode(422, ModelState);
+            }
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var pokemonMap = _mapper.Map<Pokemon>(createPokemon);
+            if (!_pokemonRepo.CreatePokemon(ownerId,categoryId,pokemon))
+            {
+                ModelState.AddModelError("","There was a problem whiles adding your Pokemon");
+                return StatusCode(500, ModelState);
+            }
+            return Ok("Pokemon has been added successfully");
         }
         
     }

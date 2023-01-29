@@ -15,14 +15,14 @@ public class ReviewerRepo : IReviewerRepo
     
     public ICollection<Reviewer> GetReviewers()
     {
-        var reviewer = _context.Reviewers.OrderBy(r => r.ID).ToList();
+        var reviewer = _context.Reviewers.OrderBy(r => r.Id).ToList();
         return reviewer;
     }
 
-    public Reviewer Reviewer(int reviewerId)
+    public Reviewer GetReviewer(int reviewerId)
     {
         var reviewer = _context.Reviewers
-            .Where(r => r.ID == reviewerId)
+            .Where(r => r.Id == reviewerId)
             .Include(e => e.Reviews)
             .FirstOrDefault();
         return reviewer;
@@ -31,13 +31,25 @@ public class ReviewerRepo : IReviewerRepo
 
     public ICollection<Review> GetReviewsByReviewer(int reviewerId)
     {
-        var reviewer = _context.Reviews.Where(r => r.Reviewer.ID == reviewerId).ToList();
+        var reviewer = _context.Reviews.Where(r => r.Reviewer.Id == reviewerId).ToList();
         return reviewer;
     }
 
     public bool ReviewerExist(int reviewerId)
     {
-        var reviewer = _context.Reviewers.Any(r => r.ID == reviewerId);
+        var reviewer = _context.Reviewers.Any(r => r.Id == reviewerId);
         return reviewer;
+    }
+
+    public bool CreateReviewer(Reviewer createReviewer)
+    {
+        _context.Add(createReviewer);
+        return Save();
+    }
+
+    public bool Save()
+    {
+        var saved = _context.SaveChanges();
+        return saved > 0 ? true : false;
     }
 }

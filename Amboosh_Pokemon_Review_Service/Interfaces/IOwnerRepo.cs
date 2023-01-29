@@ -9,4 +9,6 @@ public interface IOwnerRepo
     ICollection<Owner> GetOwnerOfAPokemon(int pokemonId);
     ICollection<Pokemon> GetPokemonByOwner(int ownerId);
     bool OwnerExists(int ownerId);
+    bool CreateOwner(Owner createOwner);
+    bool Save();
 }

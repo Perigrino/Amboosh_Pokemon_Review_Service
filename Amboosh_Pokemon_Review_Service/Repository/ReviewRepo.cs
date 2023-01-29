@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using Amboosh_Library.Data.Paging;
 using Amboosh_Pokemon_Review_Service.Data;
 using Amboosh_Pokemon_Review_Service.Interfaces;
@@ -36,5 +37,17 @@ public class ReviewRepo : IReviewRepo
     {
         var review = _context.Reviews.Any(r => r.Id == reviewId);
         return review;
+    }
+
+    public bool CreateReview(Review createReview)
+    {
+        _context.Add(createReview);
+        return Save();
+    }
+
+    public bool Save()
+    {
+        var saved = _context.SaveChanges();
+        return saved > 0 ? true : false;
     }
 }

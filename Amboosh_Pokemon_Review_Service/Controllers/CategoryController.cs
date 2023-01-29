@@ -1,7 +1,9 @@
 using Microsoft.AspNetCore.Mvc;
 using Amboosh_Pokemon_Review_Service.Dto;
 using Amboosh_Pokemon_Review_Service.Interfaces;
+using Amboosh_Pokemon_Review_Service.Model;
 using AutoMapper;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace Amboosh_Pokemon_Review_Service.Controllers
 {
@@ -52,6 +54,35 @@ namespace Amboosh_Pokemon_Review_Service.Controllers
                 return BadRequest(ModelState);
             }
             return Ok(pokemon);
+        }
+        
+        
+        // POST: api/Pokemon
+        [HttpPost]
+        public IActionResult PostCategory([FromBody]  CategoryDto createCategory)
+        {
+            if (createCategory == null)
+                return BadRequest(ModelState);
+
+            var category = _categoryRepo.GetCategories().Where(c => c.Name.Trim().ToUpper() == createCategory.Name.Trim().ToUpper()).FirstOrDefault();
+
+            if (category != null)
+            {
+                ModelState.AddModelError("","This category already exists");
+                return StatusCode(422, ModelState);
+            }
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+            
+            var catergoryMap = _mapper.Map<Category>(createCategory);
+
+            if (!_categoryRepo.CreateCategory(catergoryMap))
+            {
+                ModelState.AddModelError("","Something went wrong whiles creating your Category");
+                return StatusCode(500, ModelState);
+            }
+
+            return Ok("Category has been created successfully");
         }
     }
 }

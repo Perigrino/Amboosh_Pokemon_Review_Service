@@ -44,4 +44,16 @@ public class OwnerRepo : IOwnerRepo
     {
         return _context.Owners.Any(o => o.Id == ownerId);
     }
+
+    public bool CreateOwner(Owner createOwner)
+    {
+        var owner = _context.Add(createOwner);
+        return Save();
+    }
+
+    public bool Save()
+    {
+        var saved = _context.SaveChanges();
+        return saved > 0 ? true : false;
+    }
 }

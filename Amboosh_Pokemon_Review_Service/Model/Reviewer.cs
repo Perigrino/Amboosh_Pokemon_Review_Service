@@ -2,7 +2,7 @@ namespace Amboosh_Pokemon_Review_Service.Model;
 
 public class Reviewer
 {
-    public int ID { get; set; }
+    public int Id { get; set; }
     public string FirstName { get; set; }
     public string LastName { get; set; }
     //Navigation Properties

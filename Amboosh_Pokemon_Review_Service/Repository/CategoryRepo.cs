@@ -38,4 +38,16 @@ public class CategoryRepo : ICategory
     {
         return _context.Categories.Any(c => c.Id == id);
     }
+
+    public bool CreateCategory(Category createCategory)
+    {
+        var category = _context.Add(createCategory);
+        return Save();
+    }
+
+    public bool Save()
+    {
+        var save = _context.SaveChanges();
+        return save > 0 ? true : false;
+    }
 }

@@ -5,6 +5,7 @@ using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using Amboosh_Pokemon_Review_Service.Dto;
 using Amboosh_Pokemon_Review_Service.Interfaces;
+using Amboosh_Pokemon_Review_Service.Model;
 using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -16,12 +17,14 @@ namespace Amboosh_Pokemon_Review_Service.Controllers
     public class OwnerController : ControllerBase
     {
         private readonly IOwnerRepo _ownerRepo;
+        private readonly ICountryRepo _countryRepo;
         private readonly IMapper _mapper;
 
-        public OwnerController(IOwnerRepo ownerRepo, IMapper mapper)
+        public OwnerController(IOwnerRepo ownerRepo, ICountryRepo countryRepo, IMapper mapper)
         {
             _ownerRepo = ownerRepo;
             _mapper = mapper;
+            _countryRepo = countryRepo;
         }
         
         // GET: api/Owner
@@ -72,12 +75,38 @@ namespace Amboosh_Pokemon_Review_Service.Controllers
             return Ok(owner);
         }
 
-        // // POST: api/Owner
-        // [HttpPost]
-        // public void Post([FromBody] string value)
-        // {
-        // }
-        //
+        // POST: api/Owner
+        [HttpPost]
+        public IActionResult Post([FromQuery] int countryId, [FromBody] OwnerDto createOwnerDto)
+        {
+            if (createOwnerDto == null)
+                return BadRequest(ModelState);
+
+            var owner = _ownerRepo.GetOwners()
+                .Where(o => o.LastName.Trim().ToUpper() == createOwnerDto.LastName.Trim().ToUpper()).FirstOrDefault();
+
+            if (owner != null)
+            {
+                ModelState.AddModelError("", "This owner already exists");
+                return StatusCode(422, ModelState);
+            }
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var ownerMap = _mapper.Map<Owner>(createOwnerDto);
+            ownerMap.Country = _countryRepo.GetCountry(countryId);
+
+            if (!_ownerRepo.CreateOwner(ownerMap))
+            {
+                ModelState.AddModelError("","There was a problem whiles adding your Owner");
+                return StatusCode(500, ModelState);
+            }
+            return Ok("Owner has been added successfully");
+        }
+        
         // // PUT: api/Owner/5
         // [HttpPut("{id}")]
         // public void Put(int id, [FromBody] string value)

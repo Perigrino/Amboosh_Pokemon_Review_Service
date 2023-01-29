@@ -50,4 +50,16 @@ public class CountryRepo : ICountryRepo
         var country = _context.Countries.Any(c => c.Id == Id);
         return country;
     }
+
+    public bool CreateCountry(Country createCountry)
+    {
+        var country = _context.Add(createCountry);
+        return Save();
+    }
+
+    public bool Save()
+    {
+        var saved = _context.SaveChanges();
+        return saved > 0 ? true : false;
+    }
 }
