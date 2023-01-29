@@ -14,13 +14,9 @@ public class CategoryRepo : ICategory
     }
     
     
-    public ICollection<Category> GetCategories(int? pageNumber)
+    public ICollection<Category> GetCategories()
     {
         var category = _context.Categories.OrderBy(c => c.Id).ToList();
-        
-        //Paging
-        int pageSize = 10;
-        category = PaginatedList<Category>.Create(category.AsQueryable(), pageNumber ?? 1, pageSize);
         return category;
     }
 
@@ -41,5 +37,17 @@ public class CategoryRepo : ICategory
     public bool CategoryExists(int id)
     {
         return _context.Categories.Any(c => c.Id == id);
+    }
+
+    public bool CreateCategory(Category createCategory)
+    {
+        var category = _context.Add(createCategory);
+        return Save();
+    }
+
+    public bool Save()
+    {
+        var save = _context.SaveChanges();
+        return save > 0 ? true : false;
     }
 }

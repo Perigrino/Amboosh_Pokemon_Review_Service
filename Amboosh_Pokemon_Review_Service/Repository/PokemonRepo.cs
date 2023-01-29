@@ -1,5 +1,6 @@
 using Amboosh_Library.Data.Paging;
 using Amboosh_Pokemon_Review_Service.Data;
+using Amboosh_Pokemon_Review_Service.Dto;
 using Amboosh_Pokemon_Review_Service.Interfaces;
 using Amboosh_Pokemon_Review_Service.Model;
 
@@ -13,13 +14,9 @@ public class PokemonRepo : IPokemonRepo
         _context = context;
     }
 
-    public ICollection<Pokemon> GetPokemons(int? pageNumber)
+    public ICollection<Pokemon> GetPokemons()
     {
         var pokemon = _context.Pokemons.OrderBy(p=>p.Id).ToList();
-        
-        //Paging
-        int pageSize = 10;
-        pokemon = PaginatedList<Pokemon>.Create(pokemon.AsQueryable(), pageNumber ?? 1, pageSize);
         return pokemon;
     }
 
@@ -54,5 +51,33 @@ public class PokemonRepo : IPokemonRepo
     public bool PokemonExistsByName(string pokeName)
     {
         return _context.Pokemons.Any(p => p.Name == pokeName);
+    }
+
+    public bool CreatePokemon(int ownerId, int categoryId, Pokemon pokemon)
+    {
+        var pokemonOwnerEntity = _context.Owners.Where(po => po.Id == ownerId).FirstOrDefault();
+        var category = _context.Categories.Where(c => c.Id == categoryId).FirstOrDefault();
+
+        var pokemonOwner = new PokemonOwner()
+        {
+            Owner = pokemonOwnerEntity,
+            Pokemon = pokemon,
+        };
+        _context.Add(pokemonOwner);
+
+        var pokemonCategory = new PokemonCategory()
+        {
+            Category = category,
+            Pokemon = pokemon,
+        };
+        _context.Add(pokemonCategory);
+        _context.Add(pokemon);
+        return Save();
+    }
+
+    public bool Save()
+    {
+        var saved = _context.SaveChanges();
+        return saved > 0 ? true : false;
     }
 }

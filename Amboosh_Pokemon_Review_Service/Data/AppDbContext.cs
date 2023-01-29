@@ -17,22 +17,26 @@ public class AppDbContext : DbContext
         modelBuilder.Entity<PokemonCategory>()
             .HasOne(p => p.Pokemon)
             .WithMany(pc => pc.PokemonCategories)
-            .HasForeignKey(c => c.PokemonId);
+            .HasForeignKey(c => c.PokemonId)
+            .OnDelete(DeleteBehavior.SetNull);
         modelBuilder.Entity<PokemonCategory>()
             .HasOne(p => p.Category)
             .WithMany(pc => pc.PokemonCategories)
-            .HasForeignKey(c => c.CategoryId);
+            .HasForeignKey(c => c.CategoryId)
+            .OnDelete(DeleteBehavior.SetNull);
         
         modelBuilder.Entity<PokemonOwner>()
             .HasKey(po =>new {po.PokemonId, po.OwnerId});
         modelBuilder.Entity<PokemonOwner>()
             .HasOne(o => o.Pokemon)
             .WithMany(po => po.PokemonOwners)
-            .HasForeignKey(bi => bi.PokemonId);
+            .HasForeignKey(bi => bi.PokemonId)
+            .OnDelete(DeleteBehavior.SetNull);
         modelBuilder.Entity<PokemonOwner>()
             .HasOne(o => o.Owner)
             .WithMany(po => po.PokemonOwners)
-            .HasForeignKey(bi => bi.OwnerId);
+            .HasForeignKey(bi => bi.OwnerId)
+            .OnDelete(DeleteBehavior.SetNull);
         
         base.OnModelCreating(modelBuilder);
     }

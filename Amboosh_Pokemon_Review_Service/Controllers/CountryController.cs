@@ -4,9 +4,11 @@ using System.Linq;
 using System.Threading.Tasks;
 using Amboosh_Pokemon_Review_Service.Dto;
 using Amboosh_Pokemon_Review_Service.Interfaces;
+using Amboosh_Pokemon_Review_Service.Model;
 using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace Amboosh_Pokemon_Review_Service.Controllers
 {
@@ -25,10 +27,10 @@ namespace Amboosh_Pokemon_Review_Service.Controllers
         
         
         // GET: api/Country
-        [HttpGet("pagenumber{pageNumber}")]
+        [HttpGet]
         public IActionResult GetCountries(int pageNumber)
         {
-            var country = _mapper.Map<List<CountryDto>>(_countryRepo.GetCountries(pageNumber));
+            var country = _mapper.Map<List<CountryDto>>(_countryRepo.GetCountries());
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
@@ -74,13 +76,34 @@ namespace Amboosh_Pokemon_Review_Service.Controllers
         }
         
         
-        
+        // POST: api/Country
+        [HttpPost]
+        public IActionResult PostCountry([FromBody] CountryDto createCountry)
+        {
+            if (createCountry == null)
+                return BadRequest(ModelState);
 
-        // // POST: api/Country
-        // [HttpPost]
-        // public void Post([FromBody] string value)
-        // {
-        // }
+            var country = _countryRepo.GetCountries()
+                .Where(c => c.Name.Trim().ToUpper() == createCountry.Name.Trim().ToUpper()).FirstOrDefault();
+
+            if (country != null)
+            {
+                ModelState.AddModelError("","Country already exists");
+                return StatusCode(422, ModelState);
+            }
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var countryMap = _mapper.Map<Country>(createCountry);
+
+            if (!_countryRepo.CreateCountry(countryMap))
+            {
+                ModelState.AddModelError("","Something went wrong whiles adding your Country");
+                return StatusCode(500, ModelState);
+            }
+
+            return Ok("Country has been created successfully");
+        }
         //
         // // PUT: api/Country/5
         // [HttpPut("{id}")]

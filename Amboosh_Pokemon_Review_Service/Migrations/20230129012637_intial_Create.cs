@@ -6,7 +6,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace Amboosh_Pokemon_Review_Service.Migrations
 {
-    public partial class InitialCreate : Migration
+    public partial class intial_Create : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -54,14 +54,14 @@ namespace Amboosh_Pokemon_Review_Service.Migrations
                 name: "Reviewers",
                 columns: table => new
                 {
-                    ID = table.Column<int>(type: "integer", nullable: false)
+                    Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     FirstName = table.Column<string>(type: "text", nullable: false),
                     LastName = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Reviewers", x => x.ID);
+                    table.PrimaryKey("PK_Reviewers", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -101,13 +101,13 @@ namespace Amboosh_Pokemon_Review_Service.Migrations
                         column: x => x.CategoryId,
                         principalTable: "Categories",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.SetNull);
                     table.ForeignKey(
                         name: "FK_PokemonCategories_Pokemons_PokemonId",
                         column: x => x.PokemonId,
                         principalTable: "Pokemons",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.SetNull);
                 });
 
             migrationBuilder.CreateTable(
@@ -120,7 +120,7 @@ namespace Amboosh_Pokemon_Review_Service.Migrations
                     Text = table.Column<string>(type: "text", nullable: false),
                     Rating = table.Column<int>(type: "integer", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
-                    ReviewerID = table.Column<int>(type: "integer", nullable: false),
+                    ReviewerId = table.Column<int>(type: "integer", nullable: false),
                     PokemonId = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
@@ -133,10 +133,10 @@ namespace Amboosh_Pokemon_Review_Service.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Reviews_Reviewers_ReviewerID",
-                        column: x => x.ReviewerID,
+                        name: "FK_Reviews_Reviewers_ReviewerId",
+                        column: x => x.ReviewerId,
                         principalTable: "Reviewers",
-                        principalColumn: "ID",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -155,13 +155,13 @@ namespace Amboosh_Pokemon_Review_Service.Migrations
                         column: x => x.OwnerId,
                         principalTable: "Owners",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.SetNull);
                     table.ForeignKey(
                         name: "FK_PokemonOwners_Pokemons_PokemonId",
                         column: x => x.PokemonId,
                         principalTable: "Pokemons",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.SetNull);
                 });
 
             migrationBuilder.CreateIndex(
@@ -185,9 +185,9 @@ namespace Amboosh_Pokemon_Review_Service.Migrations
                 column: "PokemonId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Reviews_ReviewerID",
+                name: "IX_Reviews_ReviewerId",
                 table: "Reviews",
-                column: "ReviewerID");
+                column: "ReviewerId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

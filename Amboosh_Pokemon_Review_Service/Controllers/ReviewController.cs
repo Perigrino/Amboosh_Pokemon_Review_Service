@@ -16,18 +16,22 @@ namespace Amboosh_Pokemon_Review_Service.Controllers
     public class ReviewController : ControllerBase
     {
         private readonly IReviewRepo _reviewRepo;
+        private readonly IReviewerRepo _reviewerRepo;
+        private readonly IPokemonRepo _pokemonRepo;
         private readonly IMapper _mapper;
-        public ReviewController(IReviewRepo reviewRepo, IMapper mapper)
+        public ReviewController(IReviewRepo reviewRepo, IMapper mapper, IPokemonRepo pokemonRepo, IReviewerRepo reviewerRepo)
         {
             _reviewRepo = reviewRepo;
+            _pokemonRepo = pokemonRepo;
+            _reviewerRepo = reviewerRepo;
             _mapper = mapper;
         }
         
         // GET: api/Review
-        [HttpGet("{pageNumber}/page_number")]
-        public IActionResult GetReviews(int pageNumber)
+        [HttpGet]
+        public IActionResult GetReviews()
         {
-            var reviews = _mapper.Map<List<ReviewDto>>(_reviewRepo.GetReviews(pageNumber));
+            var reviews = _mapper.Map<List<ReviewDto>>(_reviewRepo.GetReviews());
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
@@ -58,11 +62,37 @@ namespace Amboosh_Pokemon_Review_Service.Controllers
             return Ok(review);
         }
 
-        // // POST: api/Review
-        // [HttpPost]
-        // public void Post([FromBody] string value)
-        // {
-        // }
+        // POST: api/Review
+        [HttpPost]
+        public IActionResult PostReview([FromQuery] int reviewerId, [FromQuery] int pokemonId,[FromBody] ReviewDto createReview)
+        {
+            if (createReview == null)
+                return BadRequest(ModelState);
+
+            var review = _reviewRepo.GetReviews().Where(r => r.Title.Trim().ToUpper() == createReview.Title.Trim().ToUpper())
+                .FirstOrDefault();
+
+            if (review != null)
+            {
+                ModelState.AddModelError("","Review already exists");
+                return StatusCode(422, ModelState);
+            }
+
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var reviewMap = _mapper.Map<Review>(createReview);
+            reviewMap.Pokemon = _pokemonRepo.GetPokemon(pokemonId);
+            reviewMap.Reviewer = _reviewerRepo.GetReviewer(reviewerId);
+ 
+            if (!_reviewRepo.CreateReview(reviewMap))
+            {
+                ModelState.AddModelError("","There was a problem when adding your Review");
+                return StatusCode(500, ModelState);
+            }
+
+            return Ok("Review has been posted successfully");
+        }
         //
         // // PUT: api/Review/5
         // [HttpPut("{id}")]

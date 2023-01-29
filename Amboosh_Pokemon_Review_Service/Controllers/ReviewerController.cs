@@ -2,7 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Amboosh_Pokemon_Review_Service.Dto;
 using Amboosh_Pokemon_Review_Service.Interfaces;
+using Amboosh_Pokemon_Review_Service.Model;
 using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -37,7 +39,7 @@ namespace Amboosh_Pokemon_Review_Service.Controllers
         [HttpGet("{reviewerId}")]
         public IActionResult GetReviewer(int reviewerId)
         {
-            var reviewer = _reviewerRepo.Reviewer(reviewerId);
+            var reviewer = _reviewerRepo.GetReviewer(reviewerId);
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
@@ -57,12 +59,36 @@ namespace Amboosh_Pokemon_Review_Service.Controllers
             return Ok(reviewer);
         }
 
-        // // POST: api/Reviewer
-        // [HttpPost]
-        // public void Post([FromBody] string value)
-        // {
-        // }
-        //
+        // POST: api/Reviewer
+        [HttpPost]
+        public IActionResult PostReviewer([FromBody] ReviewerDto createReviewer)
+        {
+            if (createReviewer == null)
+                return BadRequest(ModelState);
+
+            var reviewer = _reviewerRepo.GetReviewers()
+                .Where(rr => rr.LastName.Trim().ToUpper() == createReviewer.LastName.Trim().ToUpper()).FirstOrDefault();
+
+            if (reviewer != null)
+            {
+                ModelState.AddModelError("","Reviewer already exists");
+                return StatusCode(422, ModelState);
+            }
+
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var reviewerMap = _mapper.Map<Reviewer>(createReviewer);
+
+            if (!_reviewerRepo.CreateReviewer(reviewerMap))
+            {
+                ModelState.AddModelError("","Something went wrong whiles adding your reviewer");
+                return StatusCode(500, ModelState);
+            }
+
+            return Ok("Reviewer has been added successfully"); 
+        }
+        
         // // PUT: api/Reviewer/5
         // [HttpPut("{id}")]
         // public void Put(int id, [FromBody] string value)

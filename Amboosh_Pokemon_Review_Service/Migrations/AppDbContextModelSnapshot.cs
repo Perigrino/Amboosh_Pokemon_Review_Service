@@ -153,7 +153,7 @@ namespace Amboosh_Pokemon_Review_Service.Migrations
                     b.Property<int>("Rating")
                         .HasColumnType("integer");
 
-                    b.Property<int>("ReviewerID")
+                    b.Property<int>("ReviewerId")
                         .HasColumnType("integer");
 
                     b.Property<string>("Text")
@@ -168,18 +168,18 @@ namespace Amboosh_Pokemon_Review_Service.Migrations
 
                     b.HasIndex("PokemonId");
 
-                    b.HasIndex("ReviewerID");
+                    b.HasIndex("ReviewerId");
 
                     b.ToTable("Reviews");
                 });
 
             modelBuilder.Entity("Amboosh_Pokemon_Review_Service.Model.Reviewer", b =>
                 {
-                    b.Property<int>("ID")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("ID"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<string>("FirstName")
                         .IsRequired()
@@ -189,7 +189,7 @@ namespace Amboosh_Pokemon_Review_Service.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.HasKey("ID");
+                    b.HasKey("Id");
 
                     b.ToTable("Reviewers");
                 });
@@ -210,13 +210,13 @@ namespace Amboosh_Pokemon_Review_Service.Migrations
                     b.HasOne("Amboosh_Pokemon_Review_Service.Model.Category", "Category")
                         .WithMany("PokemonCategories")
                         .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.SetNull)
                         .IsRequired();
 
                     b.HasOne("Amboosh_Pokemon_Review_Service.Model.Pokemon", "Pokemon")
                         .WithMany("PokemonCategories")
                         .HasForeignKey("PokemonId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.SetNull)
                         .IsRequired();
 
                     b.Navigation("Category");
@@ -229,13 +229,13 @@ namespace Amboosh_Pokemon_Review_Service.Migrations
                     b.HasOne("Amboosh_Pokemon_Review_Service.Model.Owner", "Owner")
                         .WithMany("PokemonOwners")
                         .HasForeignKey("OwnerId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.SetNull)
                         .IsRequired();
 
                     b.HasOne("Amboosh_Pokemon_Review_Service.Model.Pokemon", "Pokemon")
                         .WithMany("PokemonOwners")
                         .HasForeignKey("PokemonId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.SetNull)
                         .IsRequired();
 
                     b.Navigation("Owner");
@@ -253,7 +253,7 @@ namespace Amboosh_Pokemon_Review_Service.Migrations
 
                     b.HasOne("Amboosh_Pokemon_Review_Service.Model.Reviewer", "Reviewer")
                         .WithMany("Reviews")
-                        .HasForeignKey("ReviewerID")
+                        .HasForeignKey("ReviewerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

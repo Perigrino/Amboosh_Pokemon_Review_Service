@@ -5,7 +5,9 @@ namespace Amboosh_Pokemon_Review_Service.Interfaces;
 public interface IReviewerRepo
 {
     ICollection<Reviewer> GetReviewers();
-    Reviewer Reviewer(int reviewerId);
+    Reviewer GetReviewer(int reviewerId);
     ICollection<Review> GetReviewsByReviewer(int reviewerId);
     bool ReviewerExist(int reviewerId);
+    bool CreateReviewer(Reviewer createReviewer);
+    bool Save();
 }

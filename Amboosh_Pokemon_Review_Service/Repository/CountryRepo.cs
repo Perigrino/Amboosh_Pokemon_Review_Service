@@ -19,13 +19,9 @@ public class CountryRepo : ICountryRepo
         _mapper = mapper;
     }
     
-    public ICollection<Country> GetCountries(int? pageNumber)
+    public ICollection<Country> GetCountries()
     {
         var country =  _context.Countries.OrderBy(c => c.Id).ToList();
-        
-        //Paging
-        int pageSize = 10;
-        country = PaginatedList<Country>.Create(country.AsQueryable(), pageNumber ?? 1, pageSize);
         return country;
     }
 
@@ -53,5 +49,17 @@ public class CountryRepo : ICountryRepo
     {
         var country = _context.Countries.Any(c => c.Id == Id);
         return country;
+    }
+
+    public bool CreateCountry(Country createCountry)
+    {
+        var country = _context.Add(createCountry);
+        return Save();
+    }
+
+    public bool Save()
+    {
+        var saved = _context.SaveChanges();
+        return saved > 0 ? true : false;
     }
 }
