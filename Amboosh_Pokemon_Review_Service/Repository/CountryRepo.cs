@@ -5,6 +5,7 @@ using Amboosh_Pokemon_Review_Service.Dto;
 using Amboosh_Pokemon_Review_Service.Interfaces;
 using Amboosh_Pokemon_Review_Service.Model;
 using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 
 namespace Amboosh_Pokemon_Review_Service.Repository;
 
@@ -41,7 +42,10 @@ public class CountryRepo : ICountryRepo
 
     public ICollection<Owner> GetOwnersFromCountry(int countryId)
     {
-        var country = _context.Owners.Where(o => o.Country.Id == countryId).ToList();
+        var country = _context.Owners.Where(o => o.Country.Id == countryId)
+            .Include(c => c.Country)
+            .Include(po => po.PokemonOwners)
+            .ToList();
         return country;
     }
 

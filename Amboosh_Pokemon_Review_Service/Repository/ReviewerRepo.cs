@@ -15,7 +15,9 @@ public class ReviewerRepo : IReviewerRepo
     
     public ICollection<Reviewer> GetReviewers()
     {
-        var reviewer = _context.Reviewers.OrderBy(r => r.Id).ToList();
+        var reviewer = _context.Reviewers.OrderBy(r => r.Id)
+            .Include(e => e.Reviews)
+            .ToList();
         return reviewer;
     }
 
@@ -31,7 +33,10 @@ public class ReviewerRepo : IReviewerRepo
 
     public ICollection<Review> GetReviewsByReviewer(int reviewerId)
     {
-        var reviewer = _context.Reviews.Where(r => r.Reviewer.Id == reviewerId).ToList();
+        var reviewer = _context.Reviews.Where(r => r.Reviewer.Id == reviewerId)
+            .Include(e => e.Reviewer)
+            .Include(p => p.Pokemon)
+            .ToList();
         return reviewer;
     }
 
