@@ -1,6 +1,7 @@
 using Amboosh_Pokemon_Review_Service.Data;
 using Amboosh_Pokemon_Review_Service.Interfaces;
 using Amboosh_Pokemon_Review_Service.Model;
+using Microsoft.EntityFrameworkCore;
 
 namespace Amboosh_Pokemon_Review_Service.Repository;
 
@@ -14,7 +15,11 @@ public class OwnerRepo : IOwnerRepo
     
     public ICollection<Owner> GetOwners()
     {
-        var owner = _context.Owners.OrderBy(o => o.Id).ToList();
+        var owner = _context.Owners
+            .OrderBy(o => o.Id)
+            .Include(c =>c.Country)
+            .Include(po => po.PokemonOwners)
+            .ToList();
         return owner;
     }
 

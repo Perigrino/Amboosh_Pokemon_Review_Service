@@ -74,7 +74,7 @@ namespace Amboosh_Pokemon_Review_Service.Controllers
         
         // POST: api/Owner
         [HttpPost]
-        public IActionResult Post([FromQuery] int ownerId,int categoryId, [FromBody] PokemonDto createPokemon)
+        public IActionResult Post([FromQuery] int ownerId,[FromQuery] int categoryId, [FromBody] PokemonDto createPokemon)
         {
             if (createPokemon == null)
                 return BadRequest(ModelState);
@@ -94,7 +94,7 @@ namespace Amboosh_Pokemon_Review_Service.Controllers
             }
 
             var pokemonMap = _mapper.Map<Pokemon>(createPokemon);
-            if (!_pokemonRepo.CreatePokemon(ownerId,categoryId,pokemon))
+            if (!_pokemonRepo.CreatePokemon(ownerId,categoryId,pokemonMap))
             {
                 ModelState.AddModelError("","There was a problem whiles adding your Pokemon");
                 return StatusCode(500, ModelState);
