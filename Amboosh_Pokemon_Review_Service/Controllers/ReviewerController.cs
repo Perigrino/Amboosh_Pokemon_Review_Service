@@ -114,15 +114,28 @@ namespace Amboosh_Pokemon_Review_Service.Controllers
                 return StatusCode(500, ModelState);
             }
 
-            return Ok("Reviewer has been updated successfully.");
+            return Ok("Reviewer updated successfully.");
 
 
         }
         
-        // // DELETE: api/Reviewer/5
-        // [HttpDelete("{id}")]
-        // public void Delete(int id)
-        // {
-        // }
+        // DELETE: api/Reviewer/5
+        [HttpDelete("{reviewerId}")]
+        public IActionResult Delete(int reviewerId)
+        {
+            if (!_reviewerRepo.ReviewerExist(reviewerId))
+                return NotFound();
+
+            var reviewerToDelete = _reviewerRepo.GetReviewer(reviewerId);
+            if (!ModelState.IsValid)
+                return BadRequest();
+
+            if (!_reviewerRepo.DeleteReviewer(reviewerToDelete))
+            {
+                ModelState.AddModelError("", "error deleting reviews");
+                return StatusCode(500, ModelState);
+            }
+            return Ok("Reviewer deleted successfully");
+        }
     }
 }

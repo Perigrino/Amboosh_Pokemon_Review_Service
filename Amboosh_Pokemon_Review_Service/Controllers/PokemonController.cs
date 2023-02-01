@@ -11,12 +11,14 @@ namespace Amboosh_Pokemon_Review_Service.Controllers
     public class PokemonController : ControllerBase
     {
         private readonly IPokemonRepo _pokemonRepo;
+        private readonly IReviewRepo _reviewRepo;
         private readonly IMapper _mapper;
 
-        public PokemonController(IPokemonRepo pokemonRepo, IMapper iMapper)
+        public PokemonController(IPokemonRepo pokemonRepo, IMapper iMapper, IReviewRepo reviewRepo)
         {
             _pokemonRepo = pokemonRepo;
             _mapper = iMapper;
+            _reviewRepo = reviewRepo;
         }
 
         // GET: api/Pokemon
@@ -130,11 +132,33 @@ namespace Amboosh_Pokemon_Review_Service.Controllers
             return Ok("Pokemon details have been updated successfully.");
         }
         
-        // // DELETE: api/Review/5
-        // [HttpDelete("{id}")]
-        // public void Delete(int id)
-        // {
-        // }
+        // DELETE: api/Review/5
+        [HttpDelete("{pokemonId}")]
+        public IActionResult Delete(int pokemonId)
+        {
+            if (!_pokemonRepo.PokemonExists(pokemonId))
+            {
+                return NotFound();
+            }
+
+            var reviewsToDelete = _reviewRepo.GetReviewOfPokemon(pokemonId);
+            var pokemonToDelete = _pokemonRepo.GetPokemon(pokemonId);
+
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            if (!_reviewRepo.DeleteReviews(reviewsToDelete.ToList()))
+            {
+                ModelState.AddModelError("", "Something went wrong when deleting reviews");
+            }
+
+            if (!_pokemonRepo.DeletePokemon(pokemonToDelete))
+            {
+                ModelState.AddModelError("", "Something went wrong deleting owner");
+            }
+
+            return Ok("Pokemon deleted successfully");
+        }
 
         
     }

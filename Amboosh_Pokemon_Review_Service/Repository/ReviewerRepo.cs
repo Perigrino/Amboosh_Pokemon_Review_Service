@@ -58,6 +58,12 @@ public class ReviewerRepo : IReviewerRepo
         return Save();
     }
 
+    public bool DeleteReviewer(Reviewer reviewer)
+    {
+        _context.Remove(reviewer);
+        return Save();
+    }
+
     public bool Save()
     {
         var saved = _context.SaveChanges();

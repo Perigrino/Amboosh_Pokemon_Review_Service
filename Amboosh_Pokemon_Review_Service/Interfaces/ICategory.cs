@@ -11,5 +11,6 @@ public interface ICategory
 
     bool CreateCategory(Category Category);
     bool UpdateCategory(Category category);
+    bool DeleteCategory(Category category);
     bool Save();
 }

@@ -135,10 +135,26 @@ namespace Amboosh_Pokemon_Review_Service.Controllers
 
         }
         
-        // // DELETE: api/Owner/5
-        // [HttpDelete("{id}")]
-        // public void Delete(int id)
-        // {
-        // }
+        // DELETE: api/Owner/5
+        [HttpDelete("{ownerId}")]
+        public IActionResult Delete(int ownerId)
+        {
+            if (!_ownerRepo.OwnerExists(ownerId))
+            {
+                return NotFound();
+            }
+
+            var ownerToDelete = _ownerRepo.GetOwner(ownerId);
+
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            if (!_ownerRepo.DeleteOwner(ownerToDelete))
+            {
+                ModelState.AddModelError("", "Something went wrong deleting owner");
+            }
+
+            return Ok("Owner deleted successfully");
+        }
     }
 }
