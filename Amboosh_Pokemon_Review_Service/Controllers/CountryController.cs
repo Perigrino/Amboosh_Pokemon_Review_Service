@@ -104,13 +104,33 @@ namespace Amboosh_Pokemon_Review_Service.Controllers
 
             return Ok("Country has been created successfully");
         }
-        //
-        // // PUT: api/Country/5
-        // [HttpPut("{id}")]
-        // public void Put(int id, [FromBody] string value)
-        // {
-        // }
-        //
+        
+        // PUT: api/Country/5
+        [HttpPut("{countryId}")]
+        public IActionResult Put(int countryId, [FromBody] CountryDto country)
+        {
+            if (country == null)
+                return BadRequest(ModelState);
+
+            if (countryId != country.Id)
+                return BadRequest(ModelState);
+
+            if (!_countryRepo.CountryExists(countryId))
+                return NotFound(ModelState);
+
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var countryMap = _mapper.Map<Country>(country);
+
+            if (!_countryRepo.UpdateCountry(countryMap))
+            {
+                ModelState.AddModelError("", "Something went wrong whiles updating the Country");
+            }
+
+            return Ok("Country has been updated successfully");
+        }
+        
         // // DELETE: api/Country/5
         // [HttpDelete("{id}")]
         // public void Delete(int id)

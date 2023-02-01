@@ -39,9 +39,15 @@ public class ReviewRepo : IReviewRepo
         return review;
     }
 
-    public bool CreateReview(Review createReview)
+    public bool CreateReview(Review review)
     {
-        _context.Add(createReview);
+        _context.Add(review);
+        return Save();
+    }
+
+    public bool UpdateReview(Review review)
+    {
+        _context.Update(review);
         return Save();
     }
 

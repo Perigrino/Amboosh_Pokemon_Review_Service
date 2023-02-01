@@ -9,6 +9,7 @@ using Amboosh_Pokemon_Review_Service.Model;
 using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace Amboosh_Pokemon_Review_Service.Controllers
 {
@@ -107,12 +108,33 @@ namespace Amboosh_Pokemon_Review_Service.Controllers
             return Ok("Owner has been added successfully");
         }
         
-        // // PUT: api/Owner/5
-        // [HttpPut("{id}")]
-        // public void Put(int id, [FromBody] string value)
-        // {
-        // }
-        //
+        // PUT: api/Owner/5
+        [HttpPut("{ownerId}")]
+        public IActionResult PutOwner(int ownerId, [FromBody] OwnerDto updateOwner)
+        {
+            if (updateOwner == null)
+                return BadRequest(ModelState);
+
+            if (ownerId != updateOwner.Id)
+                return BadRequest(ModelState);
+            if (!_ownerRepo.OwnerExists(ownerId))
+                return NotFound(ModelState);
+
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var ownerMap = _mapper.Map<Owner>(updateOwner);
+
+            if (!_ownerRepo.UpdateOwner(ownerMap))
+            {
+                ModelState.AddModelError("","Something went wrong whiles updating the Owner");
+                return StatusCode(500, ModelState);
+            }
+
+            return Ok("Owner has been updated successfully");
+
+        }
+        
         // // DELETE: api/Owner/5
         // [HttpDelete("{id}")]
         // public void Delete(int id)

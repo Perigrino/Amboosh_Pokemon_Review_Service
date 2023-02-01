@@ -55,9 +55,15 @@ public class CountryRepo : ICountryRepo
         return country;
     }
 
-    public bool CreateCountry(Country createCountry)
-    {
-        var country = _context.Add(createCountry);
+    public bool CreateCountry(Country country)
+    { 
+        _context.Add(country);
+        return Save();
+    }
+
+    public bool UpdateCountry(Country country)
+    { 
+        _context.Update(country);
         return Save();
     }
 

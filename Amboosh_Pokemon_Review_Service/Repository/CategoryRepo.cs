@@ -51,6 +51,12 @@ public class CategoryRepo : ICategory
         return Save();
     }
 
+    public bool UpdateCategory(Category createCategory)
+    {
+        var category = _context.Update(createCategory);
+        return Save();
+    }
+
     public bool Save()
     {
         var save = _context.SaveChanges();
