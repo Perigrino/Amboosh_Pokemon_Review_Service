@@ -57,6 +57,12 @@ public class CategoryRepo : ICategory
         return Save();
     }
 
+    public bool DeleteCategory(Category category)
+    {
+        _context.Remove(category);
+        return Save();
+    }
+
     public bool Save()
     {
         var save = _context.SaveChanges();

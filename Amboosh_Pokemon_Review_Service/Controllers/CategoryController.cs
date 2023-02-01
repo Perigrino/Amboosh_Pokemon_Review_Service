@@ -109,10 +109,26 @@ namespace Amboosh_Pokemon_Review_Service.Controllers
             return Ok("Category has been updated successfully");
         }
         
-        // // DELETE: api/Country/5
-        // [HttpDelete("{id}")]
-        // public void Delete(int id)
-        // {
-        // }
+        // DELETE: api/Category/5
+        [HttpDelete("{categoryId}")]
+        public IActionResult Delete(int categoryId)
+        {
+            if(!_categoryRepo.CategoryExists(categoryId))
+            {
+                return NotFound();
+            }
+
+            var categoryToDelete = _categoryRepo.GetCategory(categoryId);
+
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            if(!_categoryRepo.DeleteCategory(categoryToDelete))
+            {
+                ModelState.AddModelError("", "Something went wrong deleting category");
+            }
+
+            return Ok("Category deleted successfully");
+        }
     }
 }
