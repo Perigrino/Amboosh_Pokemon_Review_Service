@@ -72,7 +72,7 @@ namespace Amboosh_Pokemon_Review_Service.Controllers
 
         }
         
-        // POST: api/Owner
+        // POST: api/Pokemon
         [HttpPost]
         public IActionResult Post([FromQuery] int ownerId,[FromQuery] int categoryId, [FromBody] PokemonDto createPokemon)
         {
@@ -101,6 +101,41 @@ namespace Amboosh_Pokemon_Review_Service.Controllers
             }
             return Ok("Pokemon has been added successfully");
         }
+        
+        
+        // PUT: api/Pokemon/5
+        [HttpPut("{pokemonId}")]
+        public IActionResult PutPokemon (int pokemonId,[FromQuery]int ownerId, [FromQuery]int categoryId, [FromBody] PokemonDto createPokemon)
+        {
+            if (createPokemon == null)
+                return BadRequest(ModelState);
+
+            if (pokemonId != createPokemon.Id)
+                return BadRequest(ModelState);
+            
+            if (!_pokemonRepo.PokemonExists(pokemonId))
+                return NotFound();
+
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var pokemonMap = _mapper.Map<Pokemon>(createPokemon);
+
+            if (!_pokemonRepo.UpdatePokemon(ownerId, categoryId, pokemonMap))
+            {
+                ModelState.AddModelError("","Something went wrong whiles updating Pokemon details");
+                return StatusCode(500, ModelState);
+            }
+
+            return Ok("Pokemon details have been updated successfully.");
+        }
+        
+        // // DELETE: api/Review/5
+        // [HttpDelete("{id}")]
+        // public void Delete(int id)
+        // {
+        // }
+
         
     }
 }

@@ -8,6 +8,7 @@ using Amboosh_Pokemon_Review_Service.Model;
 using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace Amboosh_Pokemon_Review_Service.Controllers
 {
@@ -93,13 +94,33 @@ namespace Amboosh_Pokemon_Review_Service.Controllers
 
             return Ok("Review has been posted successfully");
         }
-        //
-        // // PUT: api/Review/5
-        // [HttpPut("{id}")]
-        // public void Put(int id, [FromBody] string value)
-        // {
-        // }
-        //
+        
+        // PUT: api/Review/5
+        [HttpPut("{reviewId}")]
+        public IActionResult PutReview(int reviewId, [FromBody] ReviewDto review)
+        {
+            if (review == null)
+                return BadRequest(ModelState);
+
+            if (reviewId != review.Id)
+                return BadRequest(ModelState);
+
+            if (!_reviewRepo.ReviewExists(reviewId))
+                return NotFound();
+
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var reviewMap = _mapper.Map<Review>(review);
+
+            if (!_reviewRepo.UpdateReview(reviewMap))
+            {
+                ModelState.AddModelError("","Something went wrong whiles updating the Review");
+                return StatusCode(500, ModelState);
+            }
+            return Ok("Review has been updated successfully");
+        }
+        
         // // DELETE: api/Review/5
         // [HttpDelete("{id}")]
         // public void Delete(int id)

@@ -8,6 +8,7 @@ using Amboosh_Pokemon_Review_Service.Model;
 using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace Amboosh_Pokemon_Review_Service.Controllers
 {
@@ -27,7 +28,7 @@ namespace Amboosh_Pokemon_Review_Service.Controllers
         [HttpGet]
         public IActionResult GetReviewers()
         {
-            var reviewer = _reviewerRepo.GetReviewers();
+            var reviewer = _mapper.Map<List<ReviewerDto>>(_reviewerRepo.GetReviewers());
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
@@ -89,12 +90,35 @@ namespace Amboosh_Pokemon_Review_Service.Controllers
             return Ok("Reviewer has been added successfully"); 
         }
         
-        // // PUT: api/Reviewer/5
-        // [HttpPut("{id}")]
-        // public void Put(int id, [FromBody] string value)
-        // {
-        // }
-        //
+        // PUT: api/Reviewer/5
+        [HttpPut("{reviewerId}")]
+        public IActionResult PutReviewer(int reviewerId, [FromBody] ReviewerDto createReviewer)
+        {
+            if(createReviewer == null)
+                return BadRequest(ModelState);
+
+            if (reviewerId != createReviewer.Id)
+                return BadRequest(ModelState);
+
+            if (!_reviewerRepo.ReviewerExist(reviewerId))
+                return NotFound();
+
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var reviewer = _mapper.Map<Reviewer>(createReviewer);
+
+            if (!_reviewerRepo.UpdateReviewer(reviewer))
+            {
+                ModelState.AddModelError("","Something went wrong whiles updating Reviewer");
+                return StatusCode(500, ModelState);
+            }
+
+            return Ok("Reviewer has been updated successfully.");
+
+
+        }
+        
         // // DELETE: api/Reviewer/5
         // [HttpDelete("{id}")]
         // public void Delete(int id)

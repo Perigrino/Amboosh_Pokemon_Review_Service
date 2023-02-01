@@ -8,6 +8,7 @@ public interface IReviewerRepo
     Reviewer GetReviewer(int reviewerId);
     ICollection<Review> GetReviewsByReviewer(int reviewerId);
     bool ReviewerExist(int reviewerId);
-    bool CreateReviewer(Reviewer createReviewer);
+    bool CreateReviewer(Reviewer reviewer);
+    bool UpdateReviewer(Reviewer reviewer);
     bool Save();
 }

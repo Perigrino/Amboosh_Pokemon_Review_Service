@@ -9,6 +9,7 @@ public interface ICountryRepo
     Country GetCountryByOwner(int ownerId);
     ICollection<Owner> GetOwnersFromCountry(int ownerId);
     bool CountryExists(int Id);
-    bool CreateCountry(Country createCountry);
+    bool CreateCountry(Country Country);
+    bool UpdateCountry(Country country);
     bool Save();
 }
